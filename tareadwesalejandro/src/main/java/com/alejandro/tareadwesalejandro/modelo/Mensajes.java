@@ -32,11 +32,11 @@ public class Mensajes implements Serializable{
 	private String mensaje;
 	
 	@ManyToOne
-	@JoinColumn(name="idPersona")
+	@JoinColumn(name="fk_idPersona")
 	private Personas persona;
 	
 	@ManyToOne
-	@JoinColumn(name="idEjemplar")
+	@JoinColumn(name="fk_idEjemplar")
 	private Ejemplares ejemplar;
 
 	public Mensajes() {}
