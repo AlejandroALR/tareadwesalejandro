@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import com.alejandroalr.tarea3dwesalejandroalr.modelo.Ejemplar;
-import com.alejandroalr.tarea3dwesalejandroalr.modelo.Persona;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,8 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "Mensajes")
@@ -30,7 +25,6 @@ public class Mensajes implements Serializable{
 	private Long id;
 	
 	@Column
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime fechahora;
 	
 	@Column
@@ -38,11 +32,11 @@ public class Mensajes implements Serializable{
 	private String mensaje;
 	
 	@ManyToOne
-	@JoinColumn(name="idPersona")
+	@JoinColumn(name="fk_idPersona")
 	private Personas persona;
 	
 	@ManyToOne
-	@JoinColumn(name="idEjemplar")
+	@JoinColumn(name="fk_idEjemplar")
 	private Ejemplares ejemplar;
 
 	public Mensajes() {}

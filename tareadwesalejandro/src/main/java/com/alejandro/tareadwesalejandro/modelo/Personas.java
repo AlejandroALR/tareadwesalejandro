@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import com.alejandroalr.tarea3dwesalejandroalr.modelo.Credenciales;
-import com.alejandroalr.tarea3dwesalejandroalr.modelo.Mensaje;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,11 +30,11 @@ public class Personas implements Serializable{
 	private String email;
 	
 	@OneToMany
-	(mappedBy = "Personas", cascade = CascadeType.ALL)
+	(mappedBy = "persona", cascade = CascadeType.ALL)
 	private Set<Mensajes> mensajes = new HashSet<Mensajes>();
 	
 	@OneToOne
-	(mappedBy = "Personas", cascade = CascadeType.ALL)
+	(mappedBy = "persona", cascade = CascadeType.ALL)
 	private Credenciales credenciales;
 	
 	public Personas() {}

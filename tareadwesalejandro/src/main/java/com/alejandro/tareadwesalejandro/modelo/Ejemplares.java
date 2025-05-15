@@ -30,13 +30,11 @@ public class Ejemplares implements Serializable{
 	private String nombre;
 	
 	@ManyToOne
-	@JoinColumn(name="idPlanta")
+	@JoinColumn(name="fk_planta")
 	private Plantas planta;
 	
-	@OneToMany
-	(cascade= CascadeType.ALL)
-	@JoinColumn(name="idEjemplar")
-	private List<Mensajes> mensajes = new LinkedList<Mensajes>();
+	@OneToMany(mappedBy = "ejemplar", cascade = CascadeType.ALL)
+	private List<Mensajes> mensajes = new LinkedList<>();
 
 	public Ejemplares() {}
 
