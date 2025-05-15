@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Ejemplares</title></head>
+<body>
+    <h1>Listado de Ejemplares</h1>
+    <a href="/ejemplares/nuevo">+ Nuevo ejemplar</a>
+
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Planta</th>
+        </tr>
+        <tr th:each="e : ${ejemplares}">
+            <td th:text="${e.id}"></td>
+            <td th:text="${e.nombre}"></td>
+            <td th:text="${e.planta?.nombreComun}"></td>
+        </tr>
+    </table>
+</body>
+</html>

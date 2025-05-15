@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Nuevo Mensaje</title></head>
+<body>
+    <h1>Nuevo mensaje</h1>
+
+    <form th:action="@{/mensajes/guardar}" th:object="${mensaje}" method="post">
+        <label>Mensaje:</label>
+        <textarea th:field="*{mensaje}" required></textarea><br/>
+        <label>Fecha y hora:</label>
+        <input type="datetime-local" th:field="*{fechahora}" required /><br/>
+        <!-- Los siguientes campos deberían usarse con select si tienes personas/ejemplares cargados -->
+        <label>ID Persona:</label>
+        <input type="number" th:field="*{persona.id}" /><br/>
+        <label>ID Ejemplar:</label>
+        <input type="number" th:field="*{ejemplar.id}" /><br/>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <a href="/mensajes">Volver</a>
+</body>
+</html>
