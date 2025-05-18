@@ -9,5 +9,6 @@ public interface CredencialesRepository extends JpaRepository<Credenciales, Long
 
     boolean existsByUsuario(String usuario);   
     Optional<Credenciales> findByUsuario(String usuario);
+    
 }
 

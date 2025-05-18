@@ -30,7 +30,7 @@ public class Ejemplares implements Serializable{
 	private String nombre;
 	
 	@ManyToOne
-	@JoinColumn(name="fk_planta")
+	@JoinColumn(name = "fk_planta", referencedColumnName = "codigo")
 	private Plantas planta;
 	
 	@OneToMany(mappedBy = "ejemplar", cascade = CascadeType.ALL)

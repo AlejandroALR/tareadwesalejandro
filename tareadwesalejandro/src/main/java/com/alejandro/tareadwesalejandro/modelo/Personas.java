@@ -29,6 +29,9 @@ public class Personas implements Serializable{
 	@Column(unique=true)
 	private String email;
 	
+	@Column(nullable = false)
+	private String rol;
+	
 	@OneToMany
 	(mappedBy = "persona", cascade = CascadeType.ALL)
 	private Set<Mensajes> mensajes = new HashSet<Mensajes>();
@@ -39,11 +42,12 @@ public class Personas implements Serializable{
 	
 	public Personas() {}
 	
-	public Personas(Long id, String nombre, String email) {
+	public Personas(Long id, String nombre, String email, String rol) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.email = email;
+		this.rol = rol;
 	}
 	
 	public Personas(String nombre, String email) {
@@ -75,6 +79,14 @@ public class Personas implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public String getRol() {
+	    return rol;
+	}
+
+	public void setRol(String rol) {
+	    this.rol = rol;
+	}
 
 	public Set<Mensajes> getMensajes() {
 		return mensajes;
@@ -94,7 +106,7 @@ public class Personas implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(credenciales, email, id, mensajes, nombre);
+		return Objects.hash(credenciales, email, id, mensajes, nombre, rol);
 	}
 
 	@Override
@@ -108,14 +120,13 @@ public class Personas implements Serializable{
 		Personas other = (Personas) obj;
 		return Objects.equals(credenciales, other.credenciales) && Objects.equals(email, other.email)
 				&& Objects.equals(id, other.id) && Objects.equals(mensajes, other.mensajes)
-				&& Objects.equals(nombre, other.nombre);
+				&& Objects.equals(nombre, other.nombre) && Objects.equals(rol, other.rol);
 	}
 
 	@Override
 	public String toString() {
-		return "Personas [id=" + id + ", nombre=" + nombre + ", email=" + email + ", mensajes=" + mensajes
-				+ ", credenciales=" + credenciales + "]";
+		return "Personas [id=" + id + ", nombre=" + nombre + ", email=" + email + ", rol=" + rol + ", mensajes="
+				+ mensajes + ", credenciales=" + credenciales + "]";
 	}
-	
-	
+
 }
