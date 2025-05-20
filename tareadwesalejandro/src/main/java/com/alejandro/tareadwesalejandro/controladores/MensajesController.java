@@ -32,4 +32,9 @@ public class MensajesController {
         serviciosMensajes.guardar(mensaje);
         return "redirect:/mensajes";
     }
+    
+	@GetMapping("/gestionMensajes")
+	public String gestionMensajes() {
+		return "/mensajes/gestionMensajes"; // gestionMensajes.html
+	}
 }

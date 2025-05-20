@@ -32,4 +32,9 @@ public class PersonasController {
         serviciosPersonas.guardar(persona);
         return "redirect:/personas";
     }
+    
+	@GetMapping("/resgistrarPersona")
+	public String registrarPersona() {
+		return "registrarPersona"; // registrarPersona.html
+	}
 }

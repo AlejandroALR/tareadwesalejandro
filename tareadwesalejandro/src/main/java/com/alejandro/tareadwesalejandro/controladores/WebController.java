@@ -36,17 +36,17 @@ public class WebController {
 
 	@GetMapping("/admin")
 	public String admin() {
-		return "admin"; // admin.html
+		return "/perfiles/admin"; // admin.html
 	}
 
 	@GetMapping("/personal")
 	public String personal() {
-		return "personal"; // personal.html
+		return "/perfiles/personal"; // personal.html
 	}
 
 	@GetMapping("/invitado")
 	public String invitado() {
-		return "invitado";
+		return "/perfiles/invitado"; // invitado.html
 	}
 
 }

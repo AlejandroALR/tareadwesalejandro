@@ -42,5 +42,10 @@ public class PlantasController {
     	serviciosplantas.eliminarPorCodigo(codigo);
         return "redirect:/plantas";
     }
+
+	@GetMapping("/gestionPlantas")
+	public String gestionPlantas() {
+		return "/plantas/gestionPlantas"; // gestionPlantas.html
+	}
 }
 

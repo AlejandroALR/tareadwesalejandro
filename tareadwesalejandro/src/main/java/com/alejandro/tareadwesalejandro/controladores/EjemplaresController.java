@@ -32,4 +32,9 @@ public class EjemplaresController {
         serviciosEjemplares.guardar(ejemplar);
         return "redirect:/ejemplares";
     }
+    
+	@GetMapping("/gestionEjemplares")
+	public String gestionEjemplares() {
+		return "/ejemplares/gestionEjemplares"; // gestionEjemplares.html
+	}
 }
