@@ -38,13 +38,13 @@
   </style>
 </head>
 <body>
-  <h1>-+- MENÚ PERSONAL -+-</h1>
+  <h1>-+- MENU PERSONAL -+-</h1>
   <h2>- Bienvenido -</h2>
   <div class="menu">
-    <a href="/plantas">Mostrar Plantas</a>
-    <a href="/ejemplares/gestion">Gestión de los Ejemplares</a>
-    <a href="/mensajes/gestion">Gestión de los Mensajes</a>
-    <a href="/login">Cerrar Sesion</a>
+    <a th:href="@{/plantas/verPlantas}">Ver Plantas</a>
+    <a th:href="@{/ejemplares/gestionEjemplares}">Gestión de los Ejemplares</a>
+    <a th:href="@{/mensajes/gestionMensajes}">Gestión de los Mensajes</a>
+    <a th:href="@{/login}">Cerrar Sesión</a>
   </div>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Gestion Ejemplares</title>
+  <title>Menu Gestion Mensajes</title>
   <style>
     body {
       font-family: sans-serif;
@@ -26,7 +26,7 @@
       display: block;
       padding: 1rem;
       text-align: center;
-      background:  #4CAF50;;
+      background: #4CAF50;
       color: white;
       text-decoration: none;
       border-radius: 6px;
@@ -38,11 +38,12 @@
   </style>
 </head>
 <body>
-  <h1>-+- GESTION EJEMPLARES -+-</h1>
+  <h1>-+- MENU GESTION MENSAJES -+-</h1>
   <div class="menu">
-    <a href="/ejemplares/registrarMensaje">Registrar Nuevo Mensaje</a>
-    <a href="/ejemplares/filtarMensaje">Filtrar Nuevo Mensaje</a>
-    <a href="/gestionMensajes">Volver</a>
+    <a th:href="@{/mensajes/registrarMensaje}">Registrar Nuevo Mensaje</a>
+    <a th:href="@{/mensajes/filtarMensaje}">Filtrar Nuevo Mensaje</a>
+    <a th:href="@{/admin}">Volver</a>
   </div>
 </body>
 </html>
+
