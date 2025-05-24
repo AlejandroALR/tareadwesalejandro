@@ -11,4 +11,7 @@ public interface PersonasRepository extends JpaRepository<Personas, Long> {
 
     boolean existsByEmail(String email);
     
+    Optional<Personas> findByCredenciales_Usuario(String usuario);
+
+    
 }

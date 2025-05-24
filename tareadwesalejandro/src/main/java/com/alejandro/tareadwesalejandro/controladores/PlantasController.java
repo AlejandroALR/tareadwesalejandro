@@ -3,15 +3,22 @@ package com.alejandro.tareadwesalejandro.controladores;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alejandro.tareadwesalejandro.dto.ModificarPlantaDTO;
+import com.alejandro.tareadwesalejandro.dto.RegistroPlantaDTO;
 import com.alejandro.tareadwesalejandro.modelo.Plantas;
+import com.alejandro.tareadwesalejandro.repositorios.PlantasRepository;
 import com.alejandro.tareadwesalejandro.servicios.ServiciosPlantas;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/plantas")
@@ -19,6 +26,9 @@ public class PlantasController {
 
     @Autowired
     private ServiciosPlantas serviciosplantas;
+    
+    @Autowired
+    private PlantasRepository plantasRepository;
 
     @GetMapping
     public String listar(Model model) {
@@ -54,27 +64,31 @@ public class PlantasController {
 	    model.addAttribute("plantas", serviciosplantas.listarTodas());
 	    return "/plantas/verPlantas"; // verPlantas.html
 	}
-	
-    @GetMapping("/registrarPlanta")
-    public String registrarPlanta(Model model) {
-        model.addAttribute("planta", new Plantas());
-        model.addAttribute("plantas", serviciosplantas.listarTodas());
-        return "/plantas/registrarPlanta";
-    }
     
+    @GetMapping("/registrarPlanta")
+    public String mostrarFormularioPlanta(Model model) {
+        model.addAttribute("planta", new RegistroPlantaDTO());
+        model.addAttribute("plantas", serviciosplantas.listarTodas());
+        return "plantas/registrarPlanta";
+    }
+
     @PostMapping("/registrarPlanta")
-    public String procesarRegistroPlanta(@ModelAttribute Plantas planta, RedirectAttributes redirectAttributes) {
-        planta.setCodigo(planta.getCodigo().toUpperCase());
-        
-        if (serviciosplantas.existePorCodigo(planta.getCodigo())) {
-            redirectAttributes.addFlashAttribute("error", "Ya existe una planta con el código " + planta.getCodigo());
-            return "redirect:/plantas/registrarPlanta";
+    public String procesarRegistroPlanta(@Valid @ModelAttribute("planta") RegistroPlantaDTO dto,
+                                         BindingResult result,
+                                         Model model,
+                                         RedirectAttributes redirectAttributes) {
+
+        if (serviciosplantas.codigoExiste(dto.getCodigo())) {
+            result.rejectValue("codigo", "error.codigo", "El código ya está registrado.");
         }
-        
-        serviciosplantas.guardarOActualizar(planta);
-        
-        redirectAttributes.addFlashAttribute("mensaje", "Planta registrada con éxito");
-        
+
+        if (result.hasErrors()) {
+            model.addAttribute("plantas", serviciosplantas.listarTodas());
+            return "plantas/registrarPlanta";
+        }
+
+        serviciosplantas.registrarPlanta(dto); // implementa esto en el servicio
+        redirectAttributes.addFlashAttribute("mensaje", "La planta ha sido registrada correctamente.");
         return "redirect:/plantas/registrarPlanta";
     }
     
@@ -83,5 +97,41 @@ public class PlantasController {
         redirectAttributes.addFlashAttribute("planta", new Plantas());
         return "redirect:/plantas/registrarPlanta";
     }
+    
+    @GetMapping("/modificarPlanta")
+    public String mostrarFormularioModificar(Model model) {
+        model.addAttribute("plantas", serviciosplantas.listarTodas());
+        model.addAttribute("plantaSeleccionada", new ModificarPlantaDTO());
+        return "plantas/modificarPlanta";
+    }
+
+    @GetMapping("/modificarPlanta/cargar")
+    public String cargarDatosPlanta(@RequestParam String codigo, Model model) {
+        Plantas planta = serviciosplantas.obtenerPorCodigo(codigo);
+        ModificarPlantaDTO dto = new ModificarPlantaDTO();
+        dto.setCodigo(planta.getCodigo());
+        dto.setNombreCientifico(planta.getNombreCientifico());
+        dto.setNombreComun(planta.getNombreComun());
+
+        model.addAttribute("plantaSeleccionada", dto);
+        model.addAttribute("plantas", serviciosplantas.listarTodas());
+        return "plantas/modificarPlanta";
+    }
+
+    @PostMapping("/modificarPlanta")
+    public String procesarModificacion(@Valid @ModelAttribute("plantaSeleccionada") ModificarPlantaDTO dto,
+                                       BindingResult result,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("plantas", serviciosplantas.listarTodas());
+            return "plantas/modificarPlanta";
+        }
+
+        serviciosplantas.actualizarPlanta(dto.getCodigo(), dto.getNombreCientifico(), dto.getNombreComun());
+        redirectAttributes.addFlashAttribute("mensaje", "Planta modificada correctamente.");
+        return "redirect:/plantas/modificarPlanta";
+    }
+
 }
 

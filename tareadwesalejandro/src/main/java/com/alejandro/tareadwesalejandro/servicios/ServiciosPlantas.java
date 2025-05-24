@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alejandro.tareadwesalejandro.dto.RegistroPlantaDTO;
 import com.alejandro.tareadwesalejandro.modelo.Plantas;
 import com.alejandro.tareadwesalejandro.repositorios.PlantasRepository;
 
@@ -34,4 +35,30 @@ public class ServiciosPlantas {
     public boolean existePorCodigo(String codigo) {
         return plantasRepository.existsByCodigo(codigo);
     }
+    
+    public boolean codigoExiste(String codigo) {
+        return plantasRepository.findByCodigo(codigo).isPresent();
+    }
+    
+    public void registrarPlanta(RegistroPlantaDTO dto) {
+        Plantas planta = new Plantas();
+        planta.setCodigo(dto.getCodigo());
+        planta.setNombreCientifico(dto.getNombreCientifico());
+        planta.setNombreComun(dto.getNombreComun());
+        plantasRepository.save(planta);
+    }
+    
+    public Plantas obtenerPorCodigo(String codigo) {
+        return plantasRepository.findByCodigo(codigo)
+                .orElseThrow(() -> new RuntimeException("Planta no encontrada"));
+    }
+
+    public void actualizarPlanta(String codigo, String nuevoCientifico, String nuevoComun) {
+        Plantas planta = obtenerPorCodigo(codigo);
+        planta.setNombreCientifico(nuevoCientifico);
+        planta.setNombreComun(nuevoComun);
+        plantasRepository.save(planta);
+    }
+
+
 }

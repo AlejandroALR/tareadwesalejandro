@@ -12,12 +12,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 @Entity
 @Table(name = "plantas")
 public class Plantas implements Serializable {
 
     @Id
     @Column(length = 10)
+    @NotBlank(message = "El código no puede estar vacío.")
+    @Pattern(regexp = "^\\S+$", message = "El código no debe contener espacios.")
     private String codigo;
 
     @Column(name = "nombreComun")
@@ -87,3 +92,4 @@ public class Plantas implements Serializable {
         return "Plantas [codigo=" + codigo + ", nombreComun=" + nombreComun + ", nombreCientifico=" + nombreCientifico + "]";
     }
 }
+

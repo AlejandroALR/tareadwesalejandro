@@ -5,9 +5,12 @@ import com.alejandro.tareadwesalejandro.modelo.Personas;
 import com.alejandro.tareadwesalejandro.servicios.ServiciosCredenciales;
 import com.alejandro.tareadwesalejandro.servicios.ServiciosPersonas;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -46,22 +49,31 @@ public class PersonasController {
 	}
 
 	@PostMapping("/registrar")
-	public String procesarRegistro(@ModelAttribute("registro") RegistroPersonaDTO dto, Model model,
-			RedirectAttributes redirectAttributes) {
+	public String procesarRegistro(@Valid @ModelAttribute("registro") RegistroPersonaDTO dto,
+	                                BindingResult result,
+	                                Model model,
+	                                RedirectAttributes redirectAttributes) {
 
-		if (serviciosPersonas.emailExiste(dto.getEmail())) {
-			model.addAttribute("error", "El correo ya está registrado.");
-			return "personas/registrarPersona";
-		}
+	    // Validaciones personalizadas añadidas al BindingResult
+	    if (serviciosPersonas.emailExiste(dto.getEmail())) {
+	        result.rejectValue("email", "error.email", "El correo ya está registrado.");
+	    }
 
-		if (serviciosCredenciales.usuarioExiste(dto.getUsuario())) {
-			model.addAttribute("error", "El nombre de usuario ya existe.");
-			return "personas/registrarPersona";
-		}
+	    if (serviciosCredenciales.usuarioExiste(dto.getUsuario())) {
+	        result.rejectValue("usuario", "error.usuario", "El nombre de usuario ya existe.");
+	    }
 
-		serviciosPersonas.registrarPersonaConCredenciales(dto);
-		redirectAttributes.addFlashAttribute("mensaje", "La persona ha sido registrada correctamente.");
-		return "redirect:/personas/registrar";
+	    // Aquí ya se recogen tanto errores del DTO como los personalizados
+	    if (result.hasErrors()) {
+	        return "personas/registrarPersona";
+	    }
+
+	    serviciosPersonas.registrarPersonaConCredenciales(dto);
+	    redirectAttributes.addFlashAttribute("mensaje", "La persona ha sido registrada correctamente.");
+	    return "redirect:/personas/registrar";
+
 	}
+
+
 
 }
