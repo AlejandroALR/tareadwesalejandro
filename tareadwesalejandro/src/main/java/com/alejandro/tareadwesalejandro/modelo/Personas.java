@@ -19,6 +19,8 @@ import jakarta.persistence.Table;
 @Table(name = "Personas")
 public class Personas implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -31,10 +33,6 @@ public class Personas implements Serializable{
 	
 	@Column(nullable = false)
 	private String rol;
-	
-	@OneToMany
-	(mappedBy = "persona", cascade = CascadeType.ALL)
-	private Set<Mensajes> mensajes = new HashSet<Mensajes>();
 	
 	@OneToOne
 	(mappedBy = "persona", cascade = CascadeType.ALL)
@@ -88,13 +86,6 @@ public class Personas implements Serializable{
 	    this.rol = rol;
 	}
 
-	public Set<Mensajes> getMensajes() {
-		return mensajes;
-	}
-
-	public void setMensajes(Set<Mensajes> mensajes) {
-		this.mensajes = mensajes;
-	}
 
 	public Credenciales getCredenciales() {
 		return credenciales;
@@ -106,7 +97,7 @@ public class Personas implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(credenciales, email, id, mensajes, nombre, rol);
+		return Objects.hash(credenciales, email, id, nombre, rol);
 	}
 
 	@Override
@@ -119,14 +110,12 @@ public class Personas implements Serializable{
 			return false;
 		Personas other = (Personas) obj;
 		return Objects.equals(credenciales, other.credenciales) && Objects.equals(email, other.email)
-				&& Objects.equals(id, other.id) && Objects.equals(mensajes, other.mensajes)
-				&& Objects.equals(nombre, other.nombre) && Objects.equals(rol, other.rol);
+				&& Objects.equals(id, other.id) && Objects.equals(nombre, other.nombre) && Objects.equals(rol, other.rol);
 	}
 
 	@Override
 	public String toString() {
-		return "Personas [id=" + id + ", nombre=" + nombre + ", email=" + email + ", rol=" + rol + ", mensajes="
-				+ mensajes + ", credenciales=" + credenciales + "]";
+		return "Personas [id=" + id + ", nombre=" + nombre + ", email=" + email + ", rol=" + rol + ", credenciales=" + credenciales + "]";
 	}
 
 }

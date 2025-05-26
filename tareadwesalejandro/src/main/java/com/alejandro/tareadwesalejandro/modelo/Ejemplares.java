@@ -18,19 +18,12 @@ public class Ejemplares implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable=false)
     private String nombre;
 
-    @Column(name = "fecha_registro")
-    private LocalDateTime fechaRegistro;
-
     @ManyToOne
-    @JoinColumn(name = "fk_planta", referencedColumnName = "codigo")
+    @JoinColumn(name = "fk_planta", referencedColumnName = "codigo", nullable=false)
     private Plantas planta;
-
-    @ManyToOne
-    @JoinColumn(name = "fk_persona")
-    private Personas persona;
 
     @OneToMany(mappedBy = "ejemplar", cascade = CascadeType.ALL)
     private List<Mensajes> mensajes = new LinkedList<>();
@@ -59,28 +52,12 @@ public class Ejemplares implements Serializable {
         this.nombre = nombre;
     }
 
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-
     public Plantas getPlanta() {
         return planta;
     }
 
     public void setPlanta(Plantas planta) {
         this.planta = planta;
-    }
-
-    public Personas getPersona() {
-        return persona;
-    }
-
-    public void setPersona(Personas persona) {
-        this.persona = persona;
     }
 
     public List<Mensajes> getMensajes() {
@@ -93,7 +70,7 @@ public class Ejemplares implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mensajes, nombre, planta, fechaRegistro, persona);
+        return Objects.hash(id, mensajes, nombre, planta);
     }
 
     @Override
@@ -103,9 +80,7 @@ public class Ejemplares implements Serializable {
         Ejemplares other = (Ejemplares) obj;
         return Objects.equals(id, other.id)
                 && Objects.equals(nombre, other.nombre)
-                && Objects.equals(fechaRegistro, other.fechaRegistro)
                 && Objects.equals(planta, other.planta)
-                && Objects.equals(persona, other.persona)
                 && Objects.equals(mensajes, other.mensajes);
     }
 
@@ -113,9 +88,7 @@ public class Ejemplares implements Serializable {
     public String toString() {
         return "Ejemplares [id=" + id +
                 ", nombre=" + nombre +
-                ", fechaRegistro=" + fechaRegistro +
                 ", planta=" + planta +
-                ", persona=" + persona +
                 ", mensajes=" + mensajes + "]";
     }
 }

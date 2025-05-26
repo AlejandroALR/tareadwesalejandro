@@ -84,8 +84,6 @@ public class ServiciosEjemplares {
         Ejemplares ejemplar = new Ejemplares();
         ejemplar.setNombre(nombreGenerado);
         ejemplar.setPlanta(planta);
-        ejemplar.setPersona(persona);
-        ejemplar.setFechaRegistro(LocalDateTime.now());
         ejemplaresRepository.save(ejemplar);
 
         // 5. Crear mensaje inicial

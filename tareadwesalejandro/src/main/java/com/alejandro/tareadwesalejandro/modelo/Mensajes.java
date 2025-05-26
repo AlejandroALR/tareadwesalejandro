@@ -24,19 +24,18 @@ public class Mensajes implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column
+	@Column(nullable=false)
 	private LocalDateTime fechahora;
 	
-	@Column
-	@Lob
+	@Column(nullable=false)
 	private String mensaje;
 	
 	@ManyToOne
-	@JoinColumn(name="fk_idPersona")
+	@JoinColumn(name="fk_idPersona", nullable=false)
 	private Personas persona;
 	
 	@ManyToOne
-	@JoinColumn(name="fk_idEjemplar")
+	@JoinColumn(name="fk_idEjemplar", nullable=false)
 	private Ejemplares ejemplar;
 
 	public Mensajes() {}
