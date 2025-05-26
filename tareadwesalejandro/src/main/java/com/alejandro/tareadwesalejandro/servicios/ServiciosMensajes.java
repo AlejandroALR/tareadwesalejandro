@@ -39,7 +39,7 @@ public class ServiciosMensajes {
 	}
 
 	public List<Mensajes> buscarEntreFechas(LocalDateTime inicio, LocalDateTime fin) {
-		return mensajesRepository.findByFechahoraBetween(inicio, fin);
+		return mensajesRepository.findByFechaBetween(inicio, fin);
 	}
 
 	public int contarPorEjemplar(Long idEjemplar) {
@@ -61,23 +61,67 @@ public class ServiciosMensajes {
 	public void guardarMensaje(RegistroMensajeDTO dto, Long idPersona) {
 		Mensajes mensaje = new Mensajes();
 		mensaje.setMensaje(dto.getMensaje());
-		mensaje.setFechahora(LocalDateTime.now());
+		mensaje.setFecha(LocalDateTime.now());
 		mensaje.setEjemplar(ejemplaresRepository.findById(dto.getIdEjemplar()).orElseThrow());
 		mensaje.setPersona(personasRepository.findById(idPersona).orElseThrow());
 		mensajesRepository.save(mensaje);
 	}
-
+	
 	public List<Mensajes> filtrarMensajes(Long idPersona, String codigoPlanta, LocalDate desde, LocalDate hasta) {
-
-		return mensajesRepository.findAll().stream()
-				.filter(m -> idPersona == null || m.getPersona().getId().equals(idPersona))
-				.filter(m -> codigoPlanta == null || m.getEjemplar().getPlanta().getCodigo().equals(codigoPlanta))
-				.filter(m -> {
-					LocalDate fechaMensaje = m.getFechahora().toLocalDate();
-					boolean desdeOK = desde == null || !fechaMensaje.isBefore(desde);
-					boolean hastaOK = hasta == null || !fechaMensaje.isAfter(hasta);
-					return desdeOK && hastaOK;
-				}).toList();
+	    return mensajesRepository.findAll().stream()
+	        .filter(m -> {
+	            if (idPersona != null) {
+	                if (m.getPersona() == null || m.getPersona().getId() == null) return false;
+	                if (!m.getPersona().getId().equals(idPersona)) return false;
+	            }
+	            return true;
+	        })
+	        .filter(m -> {
+	            if (codigoPlanta != null) {
+	                if (m.getEjemplar() == null || m.getEjemplar().getPlanta() == null) return false;
+	                if (!m.getEjemplar().getPlanta().getCodigo().equals(codigoPlanta)) return false;
+	            }
+	            return true;
+	        })
+	        .filter(m -> {
+	            if (m.getFecha() == null) return false;
+	            LocalDate fecha = m.getFecha().toLocalDate();
+	            if (desde != null && fecha.isBefore(desde)) return false;
+	            if (hasta != null && fecha.isAfter(hasta)) return false;
+	            return true;
+	        })
+	        .toList();
 	}
+
+	
+//	public List<Mensajes> filtrarMensajes(Long idPersona, String codigoPlanta, LocalDate desde, LocalDate hasta) {
+//	    return mensajesRepository.findAll().stream()
+//	        .filter(m -> m.getPersona() != null &&
+//	                     (idPersona == null || m.getPersona().getId().equals(idPersona)))
+//	        .filter(m -> m.getEjemplar() != null && m.getEjemplar().getPlanta() != null &&
+//	                     (codigoPlanta == null || m.getEjemplar().getPlanta().getCodigo().equals(codigoPlanta)))
+//	        .filter(m -> {
+//	            if (m.getFecha() == null) return false;
+//	            LocalDate fechaMensaje = m.getFecha().toLocalDate();
+//	            return (desde == null || !fechaMensaje.isBefore(desde)) &&
+//	                   (hasta == null || !fechaMensaje.isAfter(hasta));
+//	        })
+//	        .toList();
+//	}
+
+	
+
+//	public List<Mensajes> filtrarMensajes(Long idPersona, String codigoPlanta, LocalDate desde, LocalDate hasta) {
+//
+//		return mensajesRepository.findAll().stream()
+//				.filter(m -> idPersona == null || m.getPersona().getId().equals(idPersona))
+//				.filter(m -> codigoPlanta == null || m.getEjemplar().getPlanta().getCodigo().equals(codigoPlanta))
+//				.filter(m -> {
+//					LocalDate fechaMensaje = m.getFecha().toLocalDate();
+//					boolean desdeOK = desde == null || !fechaMensaje.isBefore(desde);
+//					boolean hastaOK = hasta == null || !fechaMensaje.isAfter(hasta);
+//					return desdeOK && hastaOK;
+//				}).toList();
+//	}
 
 }

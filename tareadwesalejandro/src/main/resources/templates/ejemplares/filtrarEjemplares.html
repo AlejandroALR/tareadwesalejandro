@@ -123,27 +123,23 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Planta</th>
-                    <th>Fecha de Registro</th>
-                    <th>Registrado por</th>
                     <th>Nº Mensajes</th>
-                    <th>Acciones</th>
+                    <th>Último Mensaje</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="e : ${resultados}">
-                    <td th:text="${e.nombre}"></td>
-                    <td th:text="${e.planta.nombreComun + ' (' + e.planta.codigo + ')'}"></td>
-                    <td th:text="${#temporals.format(e.fechaRegistro, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td th:text="${e.persona != null ? e.persona.nombre : 'Sin registrar'}"></td>
-                    <td th:text="${e.mensajes != null ? e.mensajes.size() : 0}"></td>
-                    <td>
-                        <a th:href="@{/ejemplares/verMensajes(id=${e.id})}" class="btn btn-primary"
-                            style="font-size: 0.9rem; padding: 0.4rem;">Ver mensajes</a>
-
+                    <td th:text="${e.codigoEjemplar}"></td>
+                    <td th:text="${e.nombrePlanta}"></td>
+                    <td th:text="${e.numeroMensajes}"></td>
+                    <td
+                        th:text="${e.fechaUltimoMensaje != null ? #temporals.format(e.fechaUltimoMensaje, 'yyyy-MM-dd HH:mm') : 'Sin mensajes'}">
                     </td>
                 </tr>
             </tbody>
         </table>
+
+
 
 
     </div>

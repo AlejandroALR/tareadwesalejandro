@@ -31,8 +31,7 @@
         }
 
         .form-control,
-        select,
-        textarea {
+        select {
             width: 100%;
             padding: 0.5rem;
             margin-bottom: 0.5rem;
@@ -108,10 +107,6 @@
                     th:text="${pl.codigo + ' - ' + pl.nombreComun + ' (' + pl.nombreCientifico + ')'}"></option>
         </select>
         <div th:if="${#fields.hasErrors('codigoPlanta')}" th:errors="*{codigoPlanta}" class="alert-danger"></div>
-
-        <label for="mensajeInicial" class="form-label">Mensaje Inicial:</label>
-        <textarea th:field="*{mensajeInicial}" class="form-control" rows="4" id="mensajeInicial"></textarea>
-        <div th:if="${#fields.hasErrors('mensajeInicial')}" th:errors="*{mensajeInicial}" class="alert-danger"></div>
 
         <button type="submit" class="btn btn-primary">Registrar Ejemplar</button>
         <a th:href="@{/ejemplares/gestionEjemplares}" class="btn btn-secondary">Volver</a>

@@ -1,16 +1,21 @@
 package com.alejandro.tareadwesalejandro.controladores;
 
+import com.alejandro.tareadwesalejandro.dto.EjemplarResumenDTO;
 import com.alejandro.tareadwesalejandro.dto.FiltroEjemplarDTO;
 import com.alejandro.tareadwesalejandro.dto.RegistroEjemplarDTO;
 import com.alejandro.tareadwesalejandro.modelo.Ejemplares;
 import com.alejandro.tareadwesalejandro.modelo.Mensajes;
 import com.alejandro.tareadwesalejandro.repositorios.EjemplaresRepository;
+import com.alejandro.tareadwesalejandro.repositorios.MensajesRepository;
 import com.alejandro.tareadwesalejandro.servicios.ServiciosEjemplares;
 import com.alejandro.tareadwesalejandro.servicios.ServiciosPersonas;
 import com.alejandro.tareadwesalejandro.servicios.ServiciosPlantas;
 
 import jakarta.validation.Valid;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,6 +42,9 @@ public class EjemplaresController {
     
     @Autowired
     private EjemplaresRepository ejemplaresRepository;
+    
+    @Autowired
+    private MensajesRepository mensajesRepository;
 
     @GetMapping
     public String listar(Model model) {
@@ -97,13 +105,32 @@ public class EjemplaresController {
 	@PostMapping("/filtrarEjemplares")
 	public String procesarFiltroEjemplares(@ModelAttribute("filtro") FiltroEjemplarDTO filtro,
 	                                       Model model) {
-	    List<Ejemplares> resultados = serviciosEjemplares.buscarEjemplaresPorPlantas(filtro.getCodigosPlantas());
+	    List<EjemplarResumenDTO> resultados = new ArrayList<>();
+
+	    List<Ejemplares> ejemplares = serviciosEjemplares.buscarEjemplaresPorPlantas(filtro.getCodigosPlantas());
+
+	    for (Ejemplares ej : ejemplares) {
+	        String codigoEjemplar = ej.getNombre();
+	        String nombrePlanta = ej.getPlanta().getNombreComun();
+	        List<Mensajes> mensajes = mensajesRepository.findByEjemplarOrderByFechaDesc(ej);
+	        int totalMensajes = mensajes.size();
+	        LocalDateTime ultimaFecha = totalMensajes > 0 ? mensajes.get(0).getFecha() : null;
+
+	        EjemplarResumenDTO dto = new EjemplarResumenDTO(
+	            codigoEjemplar,
+	            nombrePlanta,
+	            totalMensajes,
+	            ultimaFecha
+	        );
+	        resultados.add(dto);
+	    }
 
 	    model.addAttribute("filtro", filtro);
 	    model.addAttribute("plantas", serviciosPlantas.listarTodas());
 	    model.addAttribute("resultados", resultados);
 	    return "ejemplares/filtrarEjemplares";
 	}
+
 	
 	@GetMapping("/verMensajes")
 	public String verMensajesEjemplar(@RequestParam(name = "id", required = false) Long id, Model model) {
@@ -115,7 +142,7 @@ public class EjemplaresController {
 	        .orElseThrow(() -> new RuntimeException("Ejemplar no encontrado"));
 
 	    List<Mensajes> mensajesOrdenados = ejemplar.getMensajes().stream()
-	        .sorted((m1, m2) -> m1.getFechahora().compareTo(m2.getFechahora()))
+	        .sorted((m1, m2) -> m1.getFecha().compareTo(m2.getFecha()))
 	        .toList();
 
 	    model.addAttribute("ejemplar", ejemplar);
@@ -123,10 +150,31 @@ public class EjemplaresController {
 
 	    return "ejemplares/verMensajes";
 	}
+	
+	@GetMapping("/listarMensajes")
+	public String listarMensajes(Model model) {
+	    List<EjemplarResumenDTO> resumenes = new ArrayList<>();
 
+	    List<Ejemplares> ejemplares = ejemplaresRepository.findAll();
 
+	    for (Ejemplares ej : ejemplares) {
+	        String codigoEjemplar = ej.getNombre();
+	        String nombrePlanta = ej.getPlanta().getNombreComun();
+	        List<Mensajes> mensajes = mensajesRepository.findByEjemplarOrderByFechaDesc(ej);
+	        int totalMensajes = mensajes.size();
+	        LocalDateTime ultimaFecha = totalMensajes > 0 ? mensajes.get(0).getFecha() : null;
 
+	        EjemplarResumenDTO dto = new EjemplarResumenDTO(
+	            codigoEjemplar,
+	            nombrePlanta,
+	            totalMensajes,
+	            ultimaFecha
+	        );
+	        resumenes.add(dto);
+	    }
 
-
-
+	    model.addAttribute("resultados", resumenes);
+	    return "ejemplares/listarMensajes";
+	}
 }
+

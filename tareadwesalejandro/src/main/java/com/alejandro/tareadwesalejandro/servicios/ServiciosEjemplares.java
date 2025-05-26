@@ -66,34 +66,65 @@ public class ServiciosEjemplares {
         return ejemplaresRepository.findLastId();
     }
     
+    @Transactional
     public void registrarEjemplarConMensajeInicial(RegistroEjemplarDTO dto, Long idPersona) {
-
-        // 1. Obtener planta
-        Plantas planta = plantasRepository.findByCodigo(dto.getCodigoPlanta())
+        // Buscar la planta
+        var planta = plantasRepository.findById(dto.getCodigoPlanta())
                 .orElseThrow(() -> new RuntimeException("Planta no encontrada"));
 
-        // 2. Calcular número de ejemplares existentes de esa planta
-        int numExistentes = ejemplaresRepository.countByPlanta_Codigo(planta.getCodigo());
-        String nombreGenerado = planta.getCodigo() + "_" + (numExistentes + 1);
+        // Contar cuántos ejemplares hay ya de esa planta
+        long contador = ejemplaresRepository.countByPlanta(planta);
 
-        // 3. Obtener persona
-        Personas persona = personasRepository.findById(idPersona)
+        // Crear el ejemplar
+        Ejemplares nuevo = new Ejemplares();
+        nuevo.setPlanta(planta);
+        nuevo.setNombre(planta.getCodigo() + "_" + (contador + 1));
+
+        ejemplaresRepository.save(nuevo);
+
+        // Obtener persona autenticada
+        var persona = personasRepository.findById(idPersona)
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
 
-        // 4. Crear ejemplar con datos completos
-        Ejemplares ejemplar = new Ejemplares();
-        ejemplar.setNombre(nombreGenerado);
-        ejemplar.setPlanta(planta);
-        ejemplaresRepository.save(ejemplar);
-
-        // 5. Crear mensaje inicial
+        // Crear el mensaje automático
         Mensajes mensaje = new Mensajes();
-        mensaje.setMensaje(dto.getMensajeInicial());
-        mensaje.setFechahora(LocalDateTime.now());
-        mensaje.setEjemplar(ejemplar);
+        mensaje.setEjemplar(nuevo);
         mensaje.setPersona(persona);
+        mensaje.setFecha(LocalDateTime.now());
+        mensaje.setMensaje(nuevo.getNombre() + " ha sido creada por " + persona.getNombre());
+
         mensajesRepository.save(mensaje);
     }
+
+    
+//    public void registrarEjemplarConMensajeInicial(RegistroEjemplarDTO dto, Long idPersona) {
+//
+//        // 1. Obtener planta
+//        Plantas planta = plantasRepository.findByCodigo(dto.getCodigoPlanta())
+//                .orElseThrow(() -> new RuntimeException("Planta no encontrada"));
+//
+//        // 2. Calcular número de ejemplares existentes de esa planta
+//        int numExistentes = ejemplaresRepository.countByPlanta_Codigo(planta.getCodigo());
+//        String nombreGenerado = planta.getCodigo() + "_" + (numExistentes + 1);
+//
+//        // 3. Obtener persona
+//        Personas persona = personasRepository.findById(idPersona)
+//                .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+//
+//        // 4. Crear ejemplar con datos completos
+//        Ejemplares ejemplar = new Ejemplares();
+//        ejemplar.setNombre(nombreGenerado);
+//        ejemplar.setPlanta(planta);
+//        ejemplaresRepository.save(ejemplar);
+//
+//        // 5. Crear mensaje inicial
+//        Mensajes mensaje = new Mensajes();
+//        mensaje.setMensaje(dto.getMensajeInicial());
+//        mensaje.setFecha(LocalDateTime.now());
+//        mensaje.setEjemplar(ejemplar);
+//        mensaje.setPersona(persona);
+//        mensajesRepository.save(mensaje);
+//    }
 
 
     @Transactional(readOnly = true)
@@ -106,3 +137,4 @@ public class ServiciosEjemplares {
     }
 
 }
+

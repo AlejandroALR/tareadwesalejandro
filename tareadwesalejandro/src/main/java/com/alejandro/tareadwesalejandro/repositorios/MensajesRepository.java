@@ -7,18 +7,19 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.alejandro.tareadwesalejandro.modelo.Ejemplares;
 import com.alejandro.tareadwesalejandro.modelo.Mensajes;
 
 public interface MensajesRepository extends JpaRepository<Mensajes, Long> {
 
     List<Mensajes> findByEjemplarId(Long idEjemplar);
 
-    List<Mensajes> findByFechahoraBetween(LocalDateTime inicio, LocalDateTime fin);
+    List<Mensajes> findByFechaBetween(LocalDateTime inicio, LocalDateTime fin);
 
     @Query("SELECT COUNT(m) FROM Mensajes m WHERE m.ejemplar.id = ?1")
     int contarMensajesPorEjemplar(Long idEjemplar);
 
-    @Query("SELECT m.fechahora FROM Mensajes m WHERE m.ejemplar.id = ?1 ORDER BY m.fechahora DESC LIMIT 1")
+    @Query("SELECT m.fecha FROM Mensajes m WHERE m.ejemplar.id = ?1 ORDER BY m.fecha DESC LIMIT 1")
     Optional<LocalDateTime> obtenerUltimaFechaMensaje(Long idEjemplar);
 
     @Query("SELECT m FROM Mensajes m WHERE LOWER(m.persona.nombre) = LOWER(?1)")
@@ -31,4 +32,8 @@ public interface MensajesRepository extends JpaRepository<Mensajes, Long> {
         WHERE LOWER(p.codigo) = LOWER(?1) OR LOWER(p.nombreComun) = LOWER(?1)
         """)
     List<Mensajes> findByCodigoPlanta(String codigoPlanta);
+    
+    List<Mensajes> findByEjemplarOrderByFechaDesc(Ejemplares ejemplar);
+
+
 }

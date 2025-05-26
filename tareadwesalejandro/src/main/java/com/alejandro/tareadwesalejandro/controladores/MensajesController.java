@@ -99,8 +99,20 @@ public class MensajesController {
 	public String procesarFiltro(@ModelAttribute("filtro") FiltrarMensajeDTO filtro,
 	                             Model model) {
 
+	    // 🔧 Asegurar que los valores vacíos no interfieran (especialmente desde HTML)
+	    if (filtro.getIdPersona() != null && filtro.getIdPersona().toString().isBlank()) {
+	        filtro.setIdPersona(null);
+	    }
+	    if (filtro.getCodigoPlanta() != null && filtro.getCodigoPlanta().isBlank()) {
+	        filtro.setCodigoPlanta(null);
+	    }
+
 	    List<Mensajes> resultados = serviciosMensajes.filtrarMensajes(
-	        filtro.getIdPersona(), filtro.getCodigoPlanta(), filtro.getFechaDesde(), filtro.getFechaHasta());
+	        filtro.getIdPersona(),
+	        filtro.getCodigoPlanta(),
+	        filtro.getFechaDesde(),
+	        filtro.getFechaHasta()
+	    );
 
 	    model.addAttribute("filtro", filtro);
 	    model.addAttribute("personas", serviciosPersonas.listarTodas());
@@ -108,6 +120,7 @@ public class MensajesController {
 	    model.addAttribute("resultados", resultados);
 	    return "mensajes/filtrarMensaje";
 	}
+
 
 
 }

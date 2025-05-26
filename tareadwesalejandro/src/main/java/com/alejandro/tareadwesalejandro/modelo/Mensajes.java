@@ -25,7 +25,7 @@ public class Mensajes implements Serializable{
 	private Long id;
 	
 	@Column(nullable=false)
-	private LocalDateTime fechahora;
+	private LocalDateTime fecha;
 	
 	@Column(nullable=false)
 	private String mensaje;
@@ -40,9 +40,9 @@ public class Mensajes implements Serializable{
 
 	public Mensajes() {}
 	
-	public Mensajes(LocalDateTime fechahora, String mensaje, Personas persona, Ejemplares ejemplar) {
+	public Mensajes(LocalDateTime fecha, String mensaje, Personas persona, Ejemplares ejemplar) {
 		super();
-		this.fechahora = fechahora;
+		this.fecha = fecha;
 		this.mensaje = mensaje;
 		this.persona = persona;
 		this.ejemplar = ejemplar;
@@ -56,12 +56,12 @@ public class Mensajes implements Serializable{
 		this.id = id;
 	}
 
-	public LocalDateTime getFechahora() {
-		return fechahora;
+	public LocalDateTime getFecha() {
+		return fecha;
 	}
 
-	public void setFechahora(LocalDateTime fechahora) {
-		this.fechahora = fechahora;
+	public void setFecha(LocalDateTime fecha) {
+		this.fecha = fecha;
 	}
 
 	public String getMensaje() {
@@ -90,7 +90,7 @@ public class Mensajes implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(ejemplar, fechahora, id, mensaje, persona);
+		return Objects.hash(ejemplar, fecha, id, mensaje, persona);
 	}
 
 	@Override
@@ -102,14 +102,14 @@ public class Mensajes implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Mensajes other = (Mensajes) obj;
-		return Objects.equals(ejemplar, other.ejemplar) && Objects.equals(fechahora, other.fechahora)
+		return Objects.equals(ejemplar, other.ejemplar) && Objects.equals(fecha, other.fecha)
 				&& Objects.equals(id, other.id) && Objects.equals(mensaje, other.mensaje)
 				&& Objects.equals(persona, other.persona);
 	}
 
 	@Override
 	public String toString() {
-		return "Mensajes [id=" + id + ", fechahora=" + fechahora + ", mensaje=" + mensaje + ", persona=" + persona
+		return "Mensajes [id=" + id + ", fecha=" + fecha + ", mensaje=" + mensaje + ", persona=" + persona
 				+ ", ejemplar=" + ejemplar + "]";
 	}
 	

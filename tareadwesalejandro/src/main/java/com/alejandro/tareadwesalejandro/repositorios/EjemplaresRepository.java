@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.alejandro.tareadwesalejandro.modelo.Ejemplares;
+import com.alejandro.tareadwesalejandro.modelo.Plantas;
 
 public interface EjemplaresRepository extends JpaRepository<Ejemplares, Long> {
 
@@ -29,4 +30,5 @@ public interface EjemplaresRepository extends JpaRepository<Ejemplares, Long> {
     @Query("SELECT e FROM Ejemplares e LEFT JOIN FETCH e.mensajes m LEFT JOIN FETCH m.persona WHERE e.id = :id")
     Optional<Ejemplares> findByIdConMensajesYPersonas(@Param("id") Long id);
 
+    long countByPlanta(Plantas planta);
 }
