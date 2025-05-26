@@ -99,7 +99,6 @@ public class MensajesController {
 	public String procesarFiltro(@ModelAttribute("filtro") FiltrarMensajeDTO filtro,
 	                             Model model) {
 
-	    // 🔧 Asegurar que los valores vacíos no interfieran (especialmente desde HTML)
 	    if (filtro.getIdPersona() != null && filtro.getIdPersona().toString().isBlank()) {
 	        filtro.setIdPersona(null);
 	    }
