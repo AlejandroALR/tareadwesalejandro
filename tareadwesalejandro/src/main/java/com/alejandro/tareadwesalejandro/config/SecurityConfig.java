@@ -1,15 +1,16 @@
 package com.alejandro.tareadwesalejandro.config;
 
+import com.alejandro.tareadwesalejandro.servicios.ServiciosDetallesUsuarios;
+import com.alejandro.tareadwesalejandro.servicios.ServiciosUsuariosCombinados;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,22 +32,24 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // COMBINAR ADMIN + BBDD
     @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
+    public UserDetailsService combinedUserDetailsService(ServiciosDetallesUsuarios serviciosDetallesUsuarios) {
         UserDetails admin = User.builder()
                 .username(adminUsername)
                 .password(adminPassword)
                 .authorities(List.of(new SimpleGrantedAuthority("ROLE_ADMIN")))
                 .build();
 
-        return new InMemoryUserDetailsManager(admin);
+        InMemoryUserDetailsManager memory = new InMemoryUserDetailsManager(admin);
+        return new ServiciosUsuariosCombinados(memory, serviciosDetallesUsuarios);
     }
 
     @Bean
-    public DaoAuthenticationProvider authProvider(UserDetailsService userDetailsService,
-                                                  BCryptPasswordEncoder encoder) {
+    public DaoAuthenticationProvider authenticationProvider(UserDetailsService combinedUserDetailsService,
+                                                            BCryptPasswordEncoder encoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
+        provider.setUserDetailsService(combinedUserDetailsService);
         provider.setPasswordEncoder(encoder);
         return provider;
     }
@@ -55,10 +58,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/css/**", "/accederComoInvitado", "/invitado/**").permitAll()
+                .requestMatchers("/", "/login", "/css/**", "/invitado", "/perfiles/**", "/plantas/verPlantasInvi").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/personal/**").hasRole("PERSONAL")
-                .requestMatchers("/plantas/verPlantas").hasAnyRole("ADMIN", "PERSONAL", "INVITADO")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -67,7 +69,7 @@ public class SecurityConfig {
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/login?logout")
                 .permitAll()
             );
 

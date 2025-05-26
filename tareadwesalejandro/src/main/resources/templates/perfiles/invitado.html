@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
   <meta charset="UTF-8">
   <title>Menú Invitado</title>
@@ -12,9 +12,11 @@
       align-items: center;
       padding: 2rem;
     }
+
     h1 {
       color: #333;
     }
+
     .menu {
       display: flex;
       flex-direction: column;
@@ -22,6 +24,7 @@
       margin-top: 2rem;
       width: 300px;
     }
+
     .menu a {
       display: block;
       padding: 1rem;
@@ -32,6 +35,7 @@
       border-radius: 6px;
       transition: background 0.2s;
     }
+
     .menu a:hover {
       background: #1c7a1f;
     }
@@ -40,8 +44,9 @@
 <body>
   <h1>-+- MENÚ INVITADO -+-</h1>
   <div class="menu">
-    <a href="/plantas/verPlantasInvi">Ver Plantas</a>
-    <a href="/login">Volver</a>
+    <a th:href="@{/plantas/verPlantasInvi}">Ver Plantas</a>
+    <a th:href="@{/login}">Volver</a>
   </div>
 </body>
 </html>
+

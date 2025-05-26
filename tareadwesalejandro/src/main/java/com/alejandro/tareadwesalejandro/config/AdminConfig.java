@@ -20,7 +20,7 @@ public class AdminConfig {
     private String adminPassword;
 
     @Bean
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
+    public InMemoryUserDetailsManager adminUserDetailsManager() {
         UserDetails admin = User.builder()
                 .username(adminUsername)
                 .password(adminPassword)

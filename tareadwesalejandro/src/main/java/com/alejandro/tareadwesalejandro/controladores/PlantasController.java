@@ -71,6 +71,12 @@ public class PlantasController {
         model.addAttribute("plantas", serviciosplantas.listarTodas());
         return "plantas/registrarPlanta";
     }
+    
+    @GetMapping("/verPlantasInvi")
+    public String verPlantasInvi(Model model) {
+        model.addAttribute("plantas", serviciosplantas.listarTodas());
+        return "plantas/verPlantasInvi";
+    }
 
     @PostMapping("/registrarPlanta")
     public String procesarRegistroPlanta(@Valid @ModelAttribute("planta") RegistroPlantaDTO dto,
