@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alejandro.tareadwesalejandro.dto.RegistroEjemplarDTO;
 import com.alejandro.tareadwesalejandro.modelo.Ejemplares;
 import com.alejandro.tareadwesalejandro.modelo.Mensajes;
-import com.alejandro.tareadwesalejandro.modelo.Personas;
-import com.alejandro.tareadwesalejandro.modelo.Plantas;
 import com.alejandro.tareadwesalejandro.repositorios.EjemplaresRepository;
 import com.alejandro.tareadwesalejandro.repositorios.MensajesRepository;
 import com.alejandro.tareadwesalejandro.repositorios.PersonasRepository;
